@@ -1,0 +1,36 @@
+<form id="orderForm">
+  <input type="text" id="name" placeholder="Enter name" required><br>
+  <input type="number" id="product_id" placeholder="Enter product ID" required><br>
+  <input type="number" id="quantity" placeholder="Enter quantity" required><br>
+  <input type="number" id="amount" placeholder="Enter amount" required><br>
+  <button type="submit">Place Order</button>
+</form>
+
+<p id="message"></p>
+
+<script>
+  document.getElementById("orderForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const name = document.getElementById("name").value;
+    const product_id = document.getElementById("product_id").value;
+    const quantity = document.getElementById("quantity").value;
+    const amount = document.getElementById("amount").value;
+
+    try {
+      const response = await fetch("http://localhost:3000/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, product_id, quantity, amount })
+      });
+
+      const text = await response.text();
+      document.getElementById("message").innerText = text;
+
+      console.log("Server response:", text);
+    } catch (error) {
+      console.error("Error sending order:", error);
+      document.getElementById("message").innerText = "⚠️ Failed to connect to server.";
+    }
+  });
+</script>
